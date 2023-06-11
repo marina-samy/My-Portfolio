@@ -10,30 +10,53 @@ let counter = document.querySelector(".counter");
 
 
 document.getElementById('my-form').addEventListener('submit', function(event) {
-  event.preventDefault(); // Prevent form from submitting
+  event.preventDefault();
 
-  // Collect form data
-  var form = this;
-  var params = {
-    from_name: form.fullname.value,
-    email_id: form.to_email.value,
-    subject: form.subject.value,
-    message: form.message.value
-  };
+  // Get form data
+  let fullname = document.getElementById('fullname').value;
+  let email = document.getElementById('email').value;
+  let subject = document.getElementById('subject').value;
+  let message = document.getElementById('message').value;
 
-  // Send email using EmailJS
-  emailjs.send("service_aeo6v6y", "template_v0k8oxl", params)
-    .then(function(response) {
-      
-      alert("Your email was sent successfully!");
-      form.reset();
+  // Check if form fields are empty
+  if (!fullname || !email || !subject || !message) {
+    // Display error message using SweetAlert
+    swal({
+      title: "Error!",
+      text: "Please fill all fields",
+      icon: "error",
+      button: "OK"
+    });
+  } else {
+    // Send email using EmailJS
+    emailjs.send("service_aeo6v6y", "template_v0k8oxl", {
+      fullname: fullname,
+      to_email: email,
+      subject: subject,
+      message: message
+    }).then(function(response) {
+      // Display success message using SweetAlert
+      swal({
+        title: "Success!",
+        text: "Your email was sent successfully!",
+        icon: "success",
+        button: "OK"
+      });
+
+      // Reset the form
+      document.getElementById('my-form').reset();
     }, function(error) {
-      alert("Sorry, there was a problem sending your email. Please try again later.");
+      // Display error message using SweetAlert
+      swal({
+        title: "Error!",
+        text: "Sorry, there was a problem sending your email. Please try again later.",
+        icon: "error",
+        button: "OK"
+      });
       console.error(error);
     });
+  }
 });
-
-
 
 
 
